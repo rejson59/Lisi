@@ -8,9 +8,8 @@ import { ChatPanel } from './components/ChatPanel';
 import { ControlBar } from './components/ControlBar';
 import { SettingsPanel } from './components/SettingsPanel';
 import { Titlebar } from './components/Titlebar';
-import { detectEmotion, detectEmotionFromContext } from './components/emotion-detector';
 import type { EmotionType } from './components/emotions';
-import type { LisiSettings, ChatMessage, LisiState, ScreenShareFrame } from '@shared/types';
+import type { LisiSettings, ChatMessage, LisiState } from '@shared/types';
 import { DEFAULT_SETTINGS } from '@shared/types';
 
 // Deklaracja globalnego API z preload
@@ -50,7 +49,6 @@ export default function App() {
   }, []);
 
   const initializeApp = async () => {
-    // Załaduj ustawienia z localStorage (tymczasowe, potem Supabase)
     const savedSettings = localStorage.getItem('lisi-settings');
     if (savedSettings) {
       try {
@@ -60,7 +58,6 @@ export default function App() {
       }
     }
 
-    // Inicjalizuj Gemini jeśli jest klucz API
     const apiKey = settings.gemini_api_key || localStorage.getItem('gemini-api-key');
     if (apiKey) {
       await initializeGemini(apiKey);
@@ -69,7 +66,6 @@ export default function App() {
 
   const initializeGemini = async (apiKey: string) => {
     try {
-      // Dynamiczny import Gemini client
       const { GeminiLiveClient, getToolsForPlatform, toGeminiTools, AudioBufferManager, MicrophoneCapture } = await import('@shared/index');
       
       const client = new GeminiLiveClient(apiKey, {
@@ -93,10 +89,6 @@ export default function App() {
       client.on('onTextResponse', (text: string) => {
         setCurrentText((prev) => prev + text);
         setLisiState('speaking');
-        
-        // Wykryj emocję z tekstu odpowiedzi
-        const { emotion } = detectEmotion(text);
-        setCurrentEmotion(emotion);
       });
 
       client.on('onTurnComplete', () => {
@@ -107,11 +99,37 @@ export default function App() {
         setLisiState('idle');
       });
 
+      // Obsługa tool calls - KLUCZOWE dla emocji!
       client.on('onToolCall', async (calls) => {
         setLisiState('executing');
-        // Tool calls będą obsługiwane przez tool handler
+        
         for (const call of calls) {
-          addMessage('system', `🔧 Wykonuję: ${call.name}...`);
+          // Obsłuż set_emotion bezpośrednio w renderer
+          if (call.name === 'set_emotion') {
+            const emotion = call.args.emotion as EmotionType;
+            const intensity = (call.args.intensity as number) || 0.8;
+            const duration = ((call.args.duration as number) ?? 5) * 1000; // sekundy → ms
+            
+            setCurrentEmotion(emotion);
+            console.log(`[Emotion] Lisi wybrała: ${emotion} (intensity: ${intensity}, duration: ${duration}ms)`);
+            
+            // Po czasie wróć do neutralnej
+            if (duration > 0) {
+              setTimeout(() => {
+                setCurrentEmotion('neutral');
+              }, duration);
+            }
+            
+            // Wyślij odpowiedź do Gemini
+            client.sendToolResponse([{
+              call_id: call.id,
+              name: 'set_emotion',
+              result: { success: true, emotion, intensity, duration: duration / 1000 },
+            }]);
+          } else {
+            // Inne tool calls - loguj
+            addMessage('system', `🔧 Wykonuję: ${call.name}...`);
+          }
         }
       });
 
@@ -126,27 +144,21 @@ export default function App() {
 
       // Inicjalizuj audio z lip sync
       const audioManager = new AudioBufferManager();
-      audioManager.onPlay(() => setLisiState('speaking'));
-      audioManager.onStop(() => setLisiState('idle'));
       audioRef.current = audioManager;
       
-      // Udostępnij AudioContext dla lip sync
-      // AudioBufferManager tworzy AudioContext przy pierwszym użyciu
-      // Będziemy go przechwytywać po pierwszym odtworzeniu
-      const originalOnPlay = audioManager.onPlay.bind(audioManager);
+      // Przechwyć AudioContext dla lip sync
       audioManager.onPlay(() => {
         setLisiState('speaking');
-        // Przechwyć AudioContext gdy będzie dostępny
         const ctx = (audioManager as any).audioContext;
         if (ctx && !audioContextRef.current) {
           audioContextRef.current = ctx;
-          // Podłącz analyser do lip sync
           const gainNode = (audioManager as any).gainNode;
           if (gainNode) {
             audioSourceRef.current = gainNode;
           }
         }
       });
+      audioManager.onStop(() => setLisiState('idle'));
 
       const micCapture = new MicrophoneCapture();
       micCapture.onData((data) => {
@@ -185,10 +197,6 @@ export default function App() {
     addMessage('user', text);
     setLisiState('thinking');
     
-    // Wykryj emocję z wiadomości użytkownika
-    const { emotion } = detectEmotion(text);
-    setCurrentEmotion(emotion);
-    
     if (geminiRef.current?.connected) {
       geminiRef.current.sendText(text);
     } else {
@@ -225,17 +233,14 @@ export default function App() {
       await window.lisi.capture.startShare();
       setIsScreenSharing(true);
       
-      // Nasłuchuj klatek
       const unsubscribe = window.lisi.capture.onFrame((frame) => {
         setCurrentFrame(`data:image/jpeg;base64,${frame.data}`);
         
-        // Wyślij klatkę do Gemini jeśli połączono
         if (geminiRef.current?.connected) {
           geminiRef.current.sendRealtimeVideo(frame.data);
         }
       });
       
-      // Cleanup on unmount
       return unsubscribe;
     }
   }, [isScreenSharing]);
@@ -259,7 +264,6 @@ export default function App() {
     setSettings(updated);
     localStorage.setItem('lisi-settings', JSON.stringify(updated));
     
-    // Aktualizuj Gemini jeśli zmieniono klucz lub system prompt
     if (newSettings.gemini_api_key && newSettings.gemini_api_key !== settings.gemini_api_key) {
       await initializeGemini(newSettings.gemini_api_key);
     }

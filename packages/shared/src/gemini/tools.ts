@@ -16,6 +16,71 @@ function makeResult(callId: string, name: string, result: unknown, error?: strin
 }
 
 // ============================================================
+// TOOLS: Ekspresje twarzy (Desktop + Mobile)
+// ============================================================
+
+export const setEmotionTool: ToolDefinition = {
+  name: 'set_emotion',
+  category: 'system',
+  description: `Ustawia wyraz twarzy i emocję. Używaj tego żeby wyrazić swoje uczucia podczas rozmowy.
+Dostępne emocje:
+- neutral - spokojna, domyślna
+- happy - szczęśliwa, uśmiechnięta
+- excited - podekscytowana, energiczna
+- shy - nieśmiała, zawstydzona
+- love - zakochana, zauroczona
+- sad - smutna
+- angry - zła
+- surprised - zaskoczona
+- thinking - myśląca, zamyślona
+- confused - zdezorientowana
+- sleepy - śpiąca, senna
+- playful - figlarna, psotna
+- embarrassed - zawstydzona (mocniej)
+- worried - zmartwiona
+- proud - dumna
+- smug - pewna siebie, zadowolona
+- crying - płacząca
+
+Używaj tej funkcji naturalnie - np. happy gdy się cieszysz, shy gdy komplementują, surprised gdy coś Cię zaskoczy.
+Możesz też ustawić czas trwania emocji (domyślnie 5 sekund, 0 = do następnej zmiany).`,
+  platform: ['desktop', 'mobile'],
+  parameters: {
+    type: 'object',
+    properties: {
+      emotion: {
+        type: 'string',
+        description: 'Typ emocji do wyświetlenia',
+        enum: [
+          'neutral', 'happy', 'excited', 'shy', 'love', 'sad', 'angry',
+          'surprised', 'thinking', 'confused', 'sleepy', 'playful',
+          'embarrassed', 'worried', 'proud', 'smug', 'crying',
+        ],
+      },
+      intensity: {
+        type: 'number',
+        description: 'Intensywność emocji (0.1 - 1.0, domyślnie 0.8)',
+      },
+      duration: {
+        type: 'number',
+        description: 'Czas trwania w sekundach (0 = do następnej zmiany, domyślnie 5)',
+      },
+    },
+    required: ['emotion'],
+  },
+  handler: async (args, _ctx) => {
+    // Ten handler jest wywoływany po stronie shared,
+    // ale rzeczywista zmiana emocji dzieje się w renderer przez callback
+    return makeResult('', 'set_emotion', {
+      success: true,
+      emotion: args.emotion,
+      intensity: args.intensity || 0.8,
+      duration: args.duration ?? 5,
+    });
+  },
+};
+
+// ============================================================
 // TOOLS: System (Desktop + Mobile)
 // ============================================================
 
@@ -255,7 +320,6 @@ export const addCalendarEventTool: ToolDefinition = {
     required: ['title', 'start_time', 'end_time'],
   },
   handler: async (args, ctx) => {
-    // Implementacja w mobile app
     return makeResult('', 'add_calendar_event', {
       success: true,
       message: `Dodaję wydarzenie: ${args.title}`,
@@ -551,6 +615,8 @@ export const writeFileTool: ToolDefinition = {
 // ============================================================
 
 export const ALL_TOOLS: ToolDefinition[] = [
+  // Emocje (NOWE - dostępne na obu platformach)
+  setEmotionTool,
   // System
   getTimeTool,
   setTimerTool,
