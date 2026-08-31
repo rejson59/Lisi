@@ -1,0 +1,104 @@
+{
+  "expo": {
+    "name": "Lisi",
+    "slug": "lisi-assistant",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "../../icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0f0f19"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lisi.assistant",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Lisi potrzebuje mikrofonu żeby Cię słyszeć~",
+        "NSSpeechRecognitionUsageDescription": "Lisi używa rozpoznawania mowy żeby Cię rozumieć",
+        "UIBackgroundModes": ["audio", "fetch", "remote-notification"]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "../../icon.png",
+        "backgroundColor": "#0f0f19"
+      },
+      "package": "com.lisi.assistant",
+      "versionCode": 1,
+      "permissions": [
+        "RECORD_AUDIO",
+        "READ_CALENDAR",
+        "WRITE_CALENDAR",
+        "VIBRATE",
+        "RECEIVE_BOOT_COMPLETED",
+        "WAKE_LOCK",
+        "SYSTEM_ALERT_WINDOW",
+        "FOREGROUND_SERVICE",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "POST_NOTIFICATIONS",
+        "SCHEDULE_EXACT_ALARM",
+        "USE_EXACT_ALARM"
+      ],
+      "intentFilters": [
+        {
+          "action": "android.intent.action.MAIN",
+          "category": "android.intent.category.LAUNCHER"
+        }
+      ],
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleSignIn": {
+          "certificateHash": ""
+        }
+      }
+    },
+    "plugins": [
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "Lisi potrzebuje dostępu do kalendarza żeby zarządzać Twoimi wydarzeniami~"
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#ff6b9d",
+          "sounds": ["./assets/sounds/alarm.mp3"]
+        }
+      ],
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Lisi potrzebuje mikrofonu żeby Cię słyszeć~"
+        }
+      ],
+      [
+        "expo-speech",
+        {}
+      ],
+      [
+        "expo-file-system",
+        {}
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "your-project-id"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/your-project-id",
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    }
+  }
+}

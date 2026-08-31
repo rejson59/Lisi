@@ -1,0 +1,24 @@
+{
+  "name": "lisi",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lisi - Twoja lisia anime asystentka",
+  "workspaces": [
+    "packages/shared",
+    "packages/desktop",
+    "packages/mobile"
+  ],
+  "scripts": {
+    "desktop:dev": "cd packages/desktop && npm run dev",
+    "desktop:build": "cd packages/desktop && npm run build",
+    "mobile:start": "cd packages/mobile && npm start",
+    "mobile:android": "cd packages/mobile && npm run android",
+    "mobile:build": "cd packages/mobile && npm run build",
+    "shared:build": "cd packages/shared && npm run build",
+    "db:push": "cd supabase && supabase db push",
+    "db:reset": "cd supabase && supabase db reset"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
