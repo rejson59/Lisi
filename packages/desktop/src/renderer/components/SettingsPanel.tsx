@@ -347,8 +347,8 @@ export function SettingsPanel({ settings, onSave, onClose }: SettingsPanelProps)
                     value={(localSettings as any).gemini_model || 'gemini-2.0-flash-live-001'}
                     onChange={(e) => setLocalSettings((prev) => ({ ...prev, gemini_model: e.target.value } as any))}
                   >
-                    <option value="gemini-2.0-flash-live-001">Gemini 2.0 Flash Live (zalecany)</option>
-                    <option value="gemini-2.0-flash-exp">Gemini 2.0 Flash Exp</option>
+                    <option value="gemini-3.1-flash-live-preview">Gemini 3.1 Flash Live Preview (najnowszy, zalecany)</option>
+                    <option value="gemini-2.0-flash-live-001">Gemini 2.0 Flash Live (starszy)</option>
                   </select>
                   <div className="hint">
                     Gemini 2.0 Flash Live - szybki, darmowy, z audio i tools calling
