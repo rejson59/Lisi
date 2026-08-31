@@ -1,0 +1,59 @@
+{
+  "expo": {
+    "name": "Lisi",
+    "slug": "lisi-assistant",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#0f0f19",
+      "resizeMode": "contain",
+      "image": "./assets/splash.png"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lisi.assistant",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Lisi potrzebuje mikrofonu żeby Cię słyszeć~",
+        "NSSpeechRecognitionUsageDescription": "Lisi używa rozpoznawania mowy żeby Cię rozumieć"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0f0f19"
+      },
+      "package": "com.lisi.assistant",
+      "permissions": [
+        "RECORD_AUDIO",
+        "READ_CALENDAR",
+        "WRITE_CALENDAR",
+        "VIBRATE",
+        "RECEIVE_BOOT_COMPLETED",
+        "WAKE_LOCK",
+        "SYSTEM_ALERT_WINDOW",
+        "FOREGROUND_SERVICE",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ],
+      "intentFilters": [
+        {
+          "action": "android.intent.action.ASSIST",
+          "category": "android.intent.category.DEFAULT"
+        },
+        {
+          "action": "android.service.voice.VoiceInteractionService",
+          "category": "android.intent.category.DEFAULT"
+        }
+      ]
+    },
+    "plugins": [
+      "expo-calendar",
+      "expo-notifications",
+      "expo-av",
+      "expo-speech"
+    ]
+  }
+}
