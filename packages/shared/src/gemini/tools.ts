@@ -565,6 +565,169 @@ export const searchMemoryTool: ToolDefinition = {
 };
 
 // ============================================================
+// TOOLS: Spotify (Desktop + Mobile)
+// ============================================================
+
+export const spotifyPlayTool: ToolDefinition = {
+  name: 'spotify_play',
+  category: 'media',
+  description: `Odtwarza muzykę na Spotify. Możesz podać:
+- Nazwę utworu (np. "Bohemian Rhapsody")
+- Nazwę artysty (np. "Queen")  
+- Nazwę playlisty (np. "Chill Vibes")
+- Bez parametru - wznawia odtwarzanie`,
+  platform: ['desktop', 'mobile'],
+  parameters: {
+    type: 'object',
+    properties: {
+      query: { type: 'string', description: 'Nazwa utworu, artysty lub playlisty do odtworzenia' },
+      type: { type: 'string', description: 'Typ wyszukiwania', enum: ['track', 'artist', 'playlist'] },
+    },
+  },
+  handler: async (args, _ctx) => {
+    return makeResult('', 'spotify_play', {
+      success: true,
+      query: args.query,
+      message: args.query ? `Szukam i gram: ${args.query}` : 'Wznawiam odtwarzanie',
+    });
+  },
+};
+
+export const spotifyPauseTool: ToolDefinition = {
+  name: 'spotify_pause',
+  category: 'media',
+  description: 'Pauzuje muzykę na Spotify',
+  platform: ['desktop', 'mobile'],
+  parameters: { type: 'object', properties: {} },
+  handler: async (_args, _ctx) => {
+    return makeResult('', 'spotify_pause', { success: true, message: 'Pauzuję muzykę' });
+  },
+};
+
+export const spotifyNextTool: ToolDefinition = {
+  name: 'spotify_next',
+  category: 'media',
+  description: 'Przechodzi do następnego utworu na Spotify',
+  platform: ['desktop', 'mobile'],
+  parameters: { type: 'object', properties: {} },
+  handler: async (_args, _ctx) => {
+    return makeResult('', 'spotify_next', { success: true, message: 'Następny utwór' });
+  },
+};
+
+export const spotifyPreviousTool: ToolDefinition = {
+  name: 'spotify_previous',
+  category: 'media',
+  description: 'Wraca do poprzedniego utworu na Spotify',
+  platform: ['desktop', 'mobile'],
+  parameters: { type: 'object', properties: {} },
+  handler: async (_args, _ctx) => {
+    return makeResult('', 'spotify_previous', { success: true, message: 'Poprzedni utwór' });
+  },
+};
+
+export const spotifyVolumeTool: ToolDefinition = {
+  name: 'spotify_volume',
+  category: 'media',
+  description: 'Ustawia głośność Spotify (0-100)',
+  platform: ['desktop', 'mobile'],
+  parameters: {
+    type: 'object',
+    properties: {
+      level: { type: 'number', description: 'Poziom głośności 0-100' },
+    },
+    required: ['level'],
+  },
+  handler: async (args, _ctx) => {
+    return makeResult('', 'spotify_volume', {
+      success: true,
+      message: `Głośność: ${args.level}%`,
+    });
+  },
+};
+
+export const spotifyShuffleTool: ToolDefinition = {
+  name: 'spotify_shuffle',
+  category: 'media',
+  description: 'Włącza lub wyłącza losową kolejność odtwarzania',
+  platform: ['desktop', 'mobile'],
+  parameters: {
+    type: 'object',
+    properties: {
+      enabled: { type: 'string', description: 'Włącz lub wyłącz shuffle', enum: ['true', 'false'] },
+    },
+    required: ['enabled'],
+  },
+  handler: async (args, _ctx) => {
+    const enabled = args.enabled === 'true';
+    return makeResult('', 'spotify_shuffle', {
+      success: true,
+      message: enabled ? 'Losowa kolejność włączona' : 'Losowa kolejność wyłączona',
+    });
+  },
+};
+
+export const spotifyRepeatTool: ToolDefinition = {
+  name: 'spotify_repeat',
+  category: 'media',
+  description: 'Ustawia tryb powtarzania',
+  platform: ['desktop', 'mobile'],
+  parameters: {
+    type: 'object',
+    properties: {
+      mode: { type: 'string', description: 'Tryb powtarzania', enum: ['track', 'context', 'off'] },
+    },
+    required: ['mode'],
+  },
+  handler: async (args, _ctx) => {
+    const messages: Record<string, string> = {
+      track: 'Powtarzam aktualny utwór',
+      context: 'Powtarzam playlistę',
+      off: 'Powtarzanie wyłączone',
+    };
+    return makeResult('', 'spotify_repeat', {
+      success: true,
+      message: messages[args.mode as string] || 'Tryb powtarzania zmieniony',
+    });
+  },
+};
+
+export const spotifySearchTool: ToolDefinition = {
+  name: 'spotify_search',
+  category: 'media',
+  description: 'Szuka utworów, artystów lub playlist na Spotify',
+  platform: ['desktop', 'mobile'],
+  parameters: {
+    type: 'object',
+    properties: {
+      query: { type: 'string', description: 'Fraza do wyszukania' },
+      type: { type: 'string', description: 'Co szukać', enum: ['track', 'artist', 'album', 'playlist'] },
+      limit: { type: 'number', description: 'Ile wyników (1-10, domyślnie 5)' },
+    },
+    required: ['query'],
+  },
+  handler: async (args, _ctx) => {
+    return makeResult('', 'spotify_search', {
+      success: true,
+      query: args.query,
+      type: args.type || 'track',
+      limit: args.limit || 5,
+    });
+  },
+};
+
+export const spotifyNowPlayingTool: ToolDefinition = {
+  name: 'spotify_now_playing',
+  category: 'media',
+  description: 'Pobiera informacje o aktualnie odtwarzanym utworze',
+  platform: ['desktop', 'mobile'],
+  parameters: { type: 'object', properties: {} },
+  handler: async (_args, _ctx) => {
+    return makeResult('', 'spotify_now_playing', { success: true });
+  },
+};
+
+// ============================================================
 // TOOLS: Pliki (Desktop)
 // ============================================================
 
@@ -615,7 +778,7 @@ export const writeFileTool: ToolDefinition = {
 // ============================================================
 
 export const ALL_TOOLS: ToolDefinition[] = [
-  // Emocje (NOWE - dostępne na obu platformach)
+  // Emocje
   setEmotionTool,
   // System
   getTimeTool,
@@ -640,6 +803,16 @@ export const ALL_TOOLS: ToolDefinition[] = [
   setAlarmTool,
   listAlarmsTool,
   deleteAlarmTool,
+  // Spotify
+  spotifyPlayTool,
+  spotifyPauseTool,
+  spotifyNextTool,
+  spotifyPreviousTool,
+  spotifyVolumeTool,
+  spotifyShuffleTool,
+  spotifyRepeatTool,
+  spotifySearchTool,
+  spotifyNowPlayingTool,
   // Pamięć
   saveMemoryTool,
   searchMemoryTool,

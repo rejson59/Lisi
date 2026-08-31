@@ -19,3 +19,7 @@ export { MemoryManager } from './memory/manager';
 
 // Settings
 export { SettingsManager } from './settings/manager';
+
+// Spotify
+export { SpotifyService } from './spotify/service';
+export type { SpotifyTrack, SpotifyState } from './spotify/service';

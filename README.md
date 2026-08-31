@@ -45,6 +45,7 @@ Potem kliknij **⚙️** → **API** → wklej darmowy klucz z [aistudio.google.
 | **Kontrola ekranu** | Otwiera strony, klika, pisze na klawiaturze |
 | **Udostępnianie ekranu** | Lisi widzi Twój ekran na żywo |
 | **Czat + głos** | Rozmawiaj pisząc lub mówiąc do mikrofonu |
+| **Spotify** | Kontroluj muzykę głosem (play, pause, next, volume...) |
 
 ### 📱 Na telefonie
 | Funkcja | Opis |
