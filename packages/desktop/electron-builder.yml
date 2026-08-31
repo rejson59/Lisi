@@ -15,27 +15,27 @@ win:
   target:
     - nsis
     - portable
-  icon: resources/icon.png
+  icon: icon.png
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
   createDesktopShortcut: true
   createStartMenuShortcut: true
   shortcutName: Lisi
-  installerIcon: resources/icon.png
-  uninstallerIcon: resources/icon.png
-  installerHeaderIcon: resources/icon.png
+  installerIcon: icon.png
+  uninstallerIcon: icon.png
+  installerHeaderIcon: icon.png
 mac:
   target:
     - dmg
-  icon: resources/icon.png
+  icon: icon.png
   publish:
     provider: github
 linux:
   target:
     - AppImage
     - deb
-  icon: resources/icon.png
+  icon: icon.png
   category: Utility
   publish:
     provider: github
