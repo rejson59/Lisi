@@ -8,6 +8,8 @@ import { ChatPanel } from './components/ChatPanel';
 import { ControlBar } from './components/ControlBar';
 import { SettingsPanel } from './components/SettingsPanel';
 import { Titlebar } from './components/Titlebar';
+import { detectEmotion, detectEmotionFromContext } from './components/emotion-detector';
+import type { EmotionType } from './components/emotions';
 import type { LisiSettings, ChatMessage, LisiState, ScreenShareFrame } from '@shared/types';
 import { DEFAULT_SETTINGS } from '@shared/types';
 
@@ -32,11 +34,14 @@ export default function App() {
   const [currentFrame, setCurrentFrame] = useState<string | null>(null);
   const [connected, setConnected] = useState(false);
   const [currentText, setCurrentText] = useState('');
+  const [currentEmotion, setCurrentEmotion] = useState<EmotionType>('neutral');
 
   // ---- Refs ----
   const geminiRef = useRef<any>(null);
   const micRef = useRef<any>(null);
   const audioRef = useRef<any>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const audioSourceRef = useRef<AudioNode | null>(null);
 
   // ---- Inicjalizacja ----
   useEffect(() => {
@@ -88,6 +93,10 @@ export default function App() {
       client.on('onTextResponse', (text: string) => {
         setCurrentText((prev) => prev + text);
         setLisiState('speaking');
+        
+        // Wykryj emocję z tekstu odpowiedzi
+        const { emotion } = detectEmotion(text);
+        setCurrentEmotion(emotion);
       });
 
       client.on('onTurnComplete', () => {
@@ -115,11 +124,29 @@ export default function App() {
       await client.connect();
       geminiRef.current = client;
 
-      // Inicjalizuj audio
+      // Inicjalizuj audio z lip sync
       const audioManager = new AudioBufferManager();
       audioManager.onPlay(() => setLisiState('speaking'));
       audioManager.onStop(() => setLisiState('idle'));
       audioRef.current = audioManager;
+      
+      // Udostępnij AudioContext dla lip sync
+      // AudioBufferManager tworzy AudioContext przy pierwszym użyciu
+      // Będziemy go przechwytywać po pierwszym odtworzeniu
+      const originalOnPlay = audioManager.onPlay.bind(audioManager);
+      audioManager.onPlay(() => {
+        setLisiState('speaking');
+        // Przechwyć AudioContext gdy będzie dostępny
+        const ctx = (audioManager as any).audioContext;
+        if (ctx && !audioContextRef.current) {
+          audioContextRef.current = ctx;
+          // Podłącz analyser do lip sync
+          const gainNode = (audioManager as any).gainNode;
+          if (gainNode) {
+            audioSourceRef.current = gainNode;
+          }
+        }
+      });
 
       const micCapture = new MicrophoneCapture();
       micCapture.onData((data) => {
@@ -157,6 +184,10 @@ export default function App() {
     
     addMessage('user', text);
     setLisiState('thinking');
+    
+    // Wykryj emocję z wiadomości użytkownika
+    const { emotion } = detectEmotion(text);
+    setCurrentEmotion(emotion);
     
     if (geminiRef.current?.connected) {
       geminiRef.current.sendText(text);
@@ -284,6 +315,9 @@ export default function App() {
             state={lisiState}
             isSpeaking={lisiState === 'speaking'}
             isListening={isListening}
+            audioContext={audioContextRef.current}
+            audioSource={audioSourceRef.current}
+            emotion={currentEmotion}
           />
         </div>
         
