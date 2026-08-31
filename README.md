@@ -62,6 +62,7 @@ Potem kliknij **⚙️** → **API** → wklej darmowy klucz z [aistudio.google.
 | **Pamięć długotrwała** | Lisi pamięta ciekawostki o Tobie |
 | **Tools calling** | 20+ narzędzi (przeglądarka, kalendarz, budziki, pliki...) |
 | **Darmowe AI** | Gemini 2.0 Flash Live Preview (WebSocket, audio, tools) |
+| **Auto-aktualizacje** | Desktop: GitHub Releases, Mobile: OTA (Expo Updates) |
 
 ---
 

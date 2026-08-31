@@ -7,6 +7,9 @@ import { VRMViewer } from './components/VRMViewer';
 import { ChatPanel } from './components/ChatPanel';
 import { ControlBar } from './components/ControlBar';
 import { SettingsPanel } from './components/SettingsPanel';
+import { CalendarPanel } from './components/CalendarPanel';
+import { TasksPanel } from './components/TasksPanel';
+import { AlarmsPanel } from './components/AlarmsPanel';
 import { Titlebar } from './components/Titlebar';
 import type { EmotionType } from './components/emotions';
 import type { LisiSettings, ChatMessage, LisiState } from '@shared/types';
@@ -29,6 +32,9 @@ export default function App() {
   const [isListening, setIsListening] = useState(false);
   const [showChat, setShowChat] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [showTasks, setShowTasks] = useState(false);
+  const [showAlarms, setShowAlarms] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [currentFrame, setCurrentFrame] = useState<string | null>(null);
   const [connected, setConnected] = useState(false);
@@ -296,6 +302,28 @@ export default function App() {
         </button>
         <div className="sidebar-divider" />
         <button
+          className={`sidebar-btn ${showCalendar ? 'active' : ''}`}
+          onClick={() => setShowCalendar(!showCalendar)}
+          title="Kalendarz"
+        >
+          📅
+        </button>
+        <button
+          className={`sidebar-btn ${showTasks ? 'active' : ''}`}
+          onClick={() => setShowTasks(!showTasks)}
+          title="Zadania"
+        >
+          ✅
+        </button>
+        <button
+          className={`sidebar-btn ${showAlarms ? 'active' : ''}`}
+          onClick={() => setShowAlarms(!showAlarms)}
+          title="Budziki"
+        >
+          ⏰
+        </button>
+        <div className="sidebar-divider" />
+        <button
           className={`sidebar-btn ${isListening ? 'active' : ''}`}
           onClick={toggleMicrophone}
           title={isListening ? 'Zatrzymaj nasłuchiwanie' : 'Rozpocznij nasłuchiwanie'}
@@ -377,6 +405,24 @@ export default function App() {
           onClose={() => setShowSettings(false)}
         />
       )}
+
+      {/* Panel kalendarza */}
+      <CalendarPanel
+        visible={showCalendar}
+        onClose={() => setShowCalendar(false)}
+      />
+
+      {/* Panel zadań */}
+      <TasksPanel
+        visible={showTasks}
+        onClose={() => setShowTasks(false)}
+      />
+
+      {/* Panel budzików */}
+      <AlarmsPanel
+        visible={showAlarms}
+        onClose={() => setShowAlarms(false)}
+      />
     </div>
   );
 }

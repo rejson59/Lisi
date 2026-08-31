@@ -6,7 +6,11 @@ directories:
 files:
   - dist/**/*
   - resources/**/*
-  - "!node_modules/**/*"
+publish:
+  provider: github
+  owner: rejson59
+  repo: Lisi
+  releaseType: release
 win:
   target:
     - nsis
@@ -18,13 +22,20 @@ nsis:
   createDesktopShortcut: true
   createStartMenuShortcut: true
   shortcutName: Lisi
+  installerIcon: resources/icon.png
+  uninstallerIcon: resources/icon.png
+  installerHeaderIcon: resources/icon.png
 mac:
   target:
     - dmg
   icon: resources/icon.png
+  publish:
+    provider: github
 linux:
   target:
     - AppImage
     - deb
   icon: resources/icon.png
   category: Utility
+  publish:
+    provider: github

@@ -17,7 +17,9 @@
     "@lisi/shared": "*",
     "@pixiv/three-vrm": "^3.0.0",
     "@supabase/supabase-js": "^2.45.0",
+    "electron-log": "^5.2.0",
     "electron-store": "^8.2.0",
+    "electron-updater": "^6.3.0",
     "three": "^0.168.0"
   },
   "devDependencies": {
