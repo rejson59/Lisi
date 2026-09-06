@@ -90,14 +90,17 @@ export class CalendarService {
         endDate
       );
 
+      const toIso = (d: string | Date): string =>
+        d instanceof Date ? d.toISOString() : new Date(d).toISOString();
+
       return events.map((e) => ({
         id: e.id,
         user_id: 'local',
         title: e.title,
         description: e.notes || undefined,
         location: e.location || undefined,
-        start_time: e.startDate.toISOString(),
-        end_time: e.endDate.toISOString(),
+        start_time: toIso(e.startDate),
+        end_time: toIso(e.endDate),
         all_day: e.allDay,
       }));
     } catch (err) {

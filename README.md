@@ -1,142 +1,78 @@
-# 🦊 Lisi - Twoja lisia anime asystentka
+# 🦊 Lisi — Twoja lisia anime asystentka
 
-<p align="center">
-  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" />
-  <img src="https://img.shields.io/badge/Electron-2B2E3A?style=for-the-badge&logo=electron&logoColor=9FEAF9" />
-  <img src="https://img.shields.io/badge/React_Native-61DAFB?style=for-the-badge&logo=react&logoColor=black" />
-  <img src="https://img.shields.io/badge/Gemini_AI-E37400?style=for-the-badge&logo=google&logoColor=white" />
-  <img src="https://img.shields.io/badge/Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white" />
-</p>
-
-Osobista asystentka AI z modelem 3D anime-waifu. Działa na **laptopie** (.exe) i **telefonie** (.apk). Całkowicie **darmowa**.
-
-> 📖 **Pełna instrukcja instalacji:** [SETUP.md](./SETUP.md)
+Osobista asystentka AI z modelem 3D (VRM). Działa na **laptopie** (Electron) i **telefonie** (Android). Mówi głosem, widzi Twój ekran, prowadzi kalendarz, zadania, budziki i pamięta o Tobie rzeczy między rozmowami.
 
 ---
 
-## ⚡ Szybki start (3 minuty)
+## ⚡ Szybki start — wersja na laptopa (5 minut)
 
 ```bash
-# 1. Sklonuj repo
-git clone https://github.com/TWOJ_USERNAME/Lisi.git
-cd Lisi
-
-# 2. Zainstaluj
+# 1. Zainstaluj zależności (w głównym folderze)
 npm install
 
-# 3. Uruchom na laptopie
-cd packages/desktop
-npm install
-npm run dev
+# 2. Uruchom
+npm run desktop:dev
 ```
 
-Potem kliknij **⚙️** → **API** → wklej darmowy klucz z [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
+Po uruchomieniu kliknij **⚙️** → zakładka **API** → wklej darmowy klucz z [aistudio.google.com/apikey](https://aistudio.google.com/apikey) → **Zapisz**. Gotowe — możesz gadać z Lisi na głos lub pisząc.
+
+> To wszystko. Telefon i Supabase są **opcjonalne** — instrukcja w [docs/SETUP.md](docs/SETUP.md).
 
 ---
 
 ## ✨ Co potrafi
 
-### 🖥️ Na laptopie
-| Funkcja | Opis |
-|---------|------|
-| **Model 3D VRM** | Lisi wyświetla się na środku ekranu z animacjami twarzy |
-| **Prawdziwy lip sync** | Analiza audio w czasie rzeczywistym → ruchy ust |
-| **17 emocji** | Lisi sama wybiera wyraz twarzy (happy, shy, angry, love...) |
-| **Kontrola ekranu** | Otwiera strony, klika, pisze na klawiaturze |
-| **Udostępnianie ekranu** | Lisi widzi Twój ekran na żywo |
-| **Czat + głos** | Rozmawiaj pisząc lub mówiąc do mikrofonu |
-| **Spotify** | Kontroluj muzykę głosem (play, pause, next, volume...) |
-
-### 📱 Na telefonie
-| Funkcja | Opis |
-|---------|------|
-| **"Hej Lisi"** | Wywołuj jak Asystenta Google |
-| **Budzik** | Lisi budzi Cię rosnącą głośnością, mówi dopóki nie wstaniesz |
-| **Kalendarz** | Dodawaj/edytuj wydarzenia głosem |
-| **Zadania** | Lista zadań z priorytetami |
-| **Domyślny asystent** | Może zastąpić Asystenta Google |
-
-### 🔄 Na obu
-| Funkcja | Opis |
-|---------|------|
-| **Supabase sync** | Ustawienia i dane synchronizują się między urządzeniami |
-| **Pamięć długotrwała** | Lisi pamięta ciekawostki o Tobie |
-| **Tools calling** | 20+ narzędzi (przeglądarka, kalendarz, budziki, pliki...) |
-| **Darmowe AI** | Gemini 2.0 Flash Live Preview (WebSocket, audio, tools) |
-| **Auto-aktualizacje** | Desktop: GitHub Releases, Mobile: OTA (Expo Updates) |
+| | Funkcja |
+|-|---------|
+| 🖥️ | **Model 3D** — Lisi widnieje na ekranie, ma 17 emocji i prawdziwy lip sync (ruch ust z analizy dźwięku) |
+| 🎙️ | **Rozmowa głosowa** — mów do mikrofonu, Lisi odpowiada głosem (Gemini Live API) |
+| 🛠️ | **Narzędzia** — otwiera strony, klika i pisze na ekranie, widzi Twój ekran, zarządza kalendarzem, zadaniami i budzikami, czyta pliki |
+| 🧠 | **Pamięć** — zapamiętuje fakty o Tobie (opcjonalnie w Supabase, między urządzeniami) |
+| 📱 | **Telefon** — "Hej Lisi" (wake word), budzik mówiący, kalendarz i zadania głosem |
 
 ---
 
-## 🏗️ Architektura
+## 📁 Struktura projektu
 
 ```
 Lisi/
-├── Lisi.vrm                    ← Model 3D (VRoidStudio)
 ├── packages/
-│   ├── shared/                 ← Gemini API, Supabase, pamięć, narzędzia
-│   ├── desktop/                ← Electron (Three.js + lip sync + emocje)
-│   └── mobile/                 ← React Native (budzik, kalendarz, wake word)
-└── supabase/schema.sql         ← Schemat bazy danych
+│   ├── shared/      ← Logika wspólna: klient Gemini, narzędzia, Supabase, pamięć
+│   ├── desktop/     ← Aplikacja na laptopa (Electron + Three.js, model 3D)
+│   └── mobile/      ← Aplikacja na telefon (React Native + Expo)
+├── docs/
+│   ├── SETUP.md         ← 📖 Instalacja krok po kroku (desktop, .apk, Supabase)
+│   └── ARCHITECTURE.md  ← 🔍 Jak wszystko działa od środka
+└── supabase/schema.sql  ← Schemat bazy (opcjonalny sync między urządzeniami)
 ```
 
 ---
 
-## 🛠️ Technologie
+## 🛠️ Przydatne komendy
 
-| | Technologia | Dlaczego |
-|-|-------------|----------|
-| 🤖 | **Gemini 2.0 Flash Live** | Darmowe AI z audio, tools calling, WebSocket |
-| 🗄️ | **Supabase** | Darmowa baza + realtime sync między urządzeniami |
-| 🦊 | **Three.js + @pixiv/three-vrm** | Renderowanie modelu 3D VRM |
-| 🖥️ | **Electron** | Desktop app → .exe |
-| 📱 | **React Native + Expo** | Mobile app → .apk |
-| 🎤 | **Web Audio API** | Lip sync z analizą FFT |
-
----
-
-## 📖 Instalacja
-
-**Pełna instrukcja krok po kroku:** → **[SETUP.md](./SETUP.md)**
-
-### Wymagania
-- [Node.js 18+](https://nodejs.org) (LTS)
-- [Git](https://git-scm.com)
-- Darmowy klucz [Gemini API](https://aistudio.google.com/apikey)
-
-### Desktop (.exe)
-```bash
-npm install
-cd packages/desktop && npm install && npm run dev
-```
-
-### Mobile (.apk)
-```bash
-cd packages/mobile && npm install
-npx expo start                    # tryb deweloperski
-eas build -p android --profile preview  # build .apk
-```
+| Komenda (z głównego folderu) | Co robi |
+|------------------------------|---------|
+| `npm run desktop:dev` | Uruchamia Lisi na laptopie (tryb deweloperski) |
+| `npm run desktop:build` | Buduje instalator `.exe` (wynik w `packages/desktop/release/`) |
+| `npm run mobile:start` | Uruchamia aplikację mobilną przez Expo |
+| `npm run mobile:build` | Buduje `.apk` przez EAS |
+| `npm run typecheck` | Sprawdza typy TypeScript we wszystkich pakietach |
 
 ---
 
-## 🎨 Personalizacja
+## 📖 Dokumentacja
 
-Lisi jest w pełni konfigurowalna przez ustawienia (ikona ⚙️):
-
-- **Osobowość** - Zmień system prompt (np. "Jesteś poważną asystentką" lub "Jesteś szaloną lisicą!")
-- **Głos** - 8 głosów Gemini TTS (Aoede i Kore pasują do Lisi~)
-- **Fraza wybudzania** - Domyślnie "Hej Lisi", możesz zmienić
-- **Motyw** - Ciemny, jasny lub anime
-- **Emocje** - Lisi sama wybiera wyraz twarzy przez tools calling
+- **[docs/SETUP.md](docs/SETUP.md)** — pełna instalacja: Node.js, klucz Gemini, build `.exe`, aplikacja na telefon, Supabase, rozwiązywanie problemów.
+- **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** — jak Lisi działa od środka: przepływ rozmowy, narzędzia, baza danych, jak coś zmieniać.
 
 ---
 
 ## 📝 Licencja
 
-Projekt prywatny. Model 3D `Lisi.vrm` jest autorstwa właściciela repozytorium.
+Projekt prywatny. Model 3D (`packages/desktop/public/models/Lisi.vrm`) jest autorstwa właściciela repozytorium.
 
 ---
 
 <p align="center">
-  Stworzone z ❤️ i 🦊<br/>
-  <sub>Lisi - Twoja lisia anime asystentka</sub>
+  Stworzone z ❤️ i 🦊
 </p>

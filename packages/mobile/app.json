@@ -49,13 +49,7 @@
           "action": "android.intent.action.MAIN",
           "category": "android.intent.category.LAUNCHER"
         }
-      ],
-      "googleServicesFile": "./google-services.json",
-      "config": {
-        "googleSignIn": {
-          "certificateHash": ""
-        }
-      }
+      ]
     },
     "plugins": [
       [
@@ -67,9 +61,9 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/icon.png",
+          "icon": "../../icon.png",
           "color": "#ff6b9d",
-          "sounds": ["./assets/sounds/alarm.mp3"]
+          "sounds": ["./assets/sounds/alarm.wav"]
         }
       ],
       [
@@ -80,10 +74,6 @@
       ],
       [
         "expo-speech",
-        {}
-      ],
-      [
-        "expo-file-system",
         {}
       ]
     ],

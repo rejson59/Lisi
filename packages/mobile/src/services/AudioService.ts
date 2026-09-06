@@ -139,7 +139,7 @@ export class AudioService {
     volume?: number;
     onStart?: () => void;
     onDone?: () => void;
-    onError?: (error: string) => void;
+    onError?: (error: Error) => void;
   }): void {
     Speech.speak(text, {
       language: options?.language || 'pl-PL',

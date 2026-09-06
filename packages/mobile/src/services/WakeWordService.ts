@@ -2,7 +2,7 @@
 // Wake Word Service - Nasłuchiwanie frazy "Hej Lisi"
 // ============================================================
 
-import Voice from 'react-native-voice';
+import Voice from '@react-native-voice/voice';
 import { AppState, AppStateStatus } from 'react-native';
 
 type WakeWordCallback = () => void;

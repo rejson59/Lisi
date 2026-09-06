@@ -11,7 +11,6 @@ import type {
   Task,
   Alarm,
   ChatMessage,
-  DEFAULT_SETTINGS,
 } from '../types';
 
 // Typy dla bazy danych Supabase
