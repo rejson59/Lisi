@@ -5,18 +5,20 @@
   "description": "Lisi - Twoja lisia anime asystentka",
   "workspaces": [
     "packages/shared",
-    "packages/desktop",
-    "packages/mobile"
+    "packages/desktop"
   ],
   "scripts": {
+    "setup": "npm install",
     "desktop:dev": "cd packages/desktop && npm run dev",
     "desktop:build": "cd packages/desktop && npm run build",
+    "desktop:typecheck": "cd packages/desktop && npm run typecheck",
+    "shared:build": "cd packages/shared && npm run build",
+    "shared:typecheck": "cd packages/shared && npm run typecheck",
     "mobile:start": "cd packages/mobile && npm start",
     "mobile:android": "cd packages/mobile && npm run android",
-    "mobile:build": "cd packages/mobile && npm run build",
-    "shared:build": "cd packages/shared && npm run build",
-    "db:push": "cd supabase && supabase db push",
-    "db:reset": "cd supabase && supabase db reset"
+    "mobile:build": "cd packages/mobile && npm run build:android",
+    "mobile:typecheck": "cd packages/mobile && npm run typecheck",
+    "typecheck": "npm run shared:typecheck && npm run desktop:typecheck"
   },
   "engines": {
     "node": ">=18.0.0"

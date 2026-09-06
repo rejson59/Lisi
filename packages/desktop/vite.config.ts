@@ -6,6 +6,8 @@ export default defineConfig({
   plugins: [react()],
   root: 'src/renderer',
   base: './',
+  // Folder `public/` (model 3D itp.) jest serwowany w dev pod '/' i kopiowany do builda
+  publicDir: path.resolve(__dirname, 'public'),
   build: {
     outDir: '../../dist/renderer',
     emptyOutDir: true,

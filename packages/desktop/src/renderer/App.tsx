@@ -18,7 +18,7 @@ import { DEFAULT_SETTINGS } from '@shared/types';
 // Deklaracja globalnego API z preload
 declare global {
   interface Window {
-    lisi: import('../../preload/index').LisiAPI;
+    lisi: import('../preload/index').LisiAPI;
   }
 }
 
@@ -343,7 +343,7 @@ export default function App() {
       <div className={`avatar-area ${lisiState === 'executing' ? 'minimized' : 'centered'}`}>
         <div className={`vrm-container ${lisiState === 'executing' ? 'minimized' : 'centered'}`}>
           <VRMViewer
-            modelPath="./Lisi.vrm"
+            modelPath="./models/Lisi.vrm"
             state={lisiState}
             isSpeaking={lisiState === 'speaking'}
             isListening={isListening}

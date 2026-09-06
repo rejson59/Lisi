@@ -9,6 +9,7 @@ build/
 out/
 .next/
 *.tgz
+*.tsbuildinfo
 
 # Environment
 .env
@@ -31,13 +32,13 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Mobile
+# Mobile (React Native / Expo)
 packages/mobile/android/
 packages/mobile/ios/
 packages/mobile/.expo/
+packages/mobile/google-services.json
 
-# Desktop
-packages/desktop/dist/
+# Desktop (Electron)
 packages/desktop/release/
 
 # Supabase

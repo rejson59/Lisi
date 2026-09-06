@@ -107,7 +107,6 @@ export class AlarmService {
         data: { alarmId: alarm.id },
       },
       trigger: {
-        type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
         seconds: secondsUntilAlarm,
       },
     });
@@ -193,10 +192,9 @@ export class AlarmService {
 
   private async playAlarmSound(): Promise<void> {
     try {
-      // Użyj domyślnego dźwięku alarmu
-      // W produkcji załaduj z assets/sounds/alarm.mp3
+      // Dźwięk alarmu z assets/sounds/alarm.wav
       const { sound } = await Audio.Sound.createAsync(
-        require('../../assets/sounds/alarm.mp3'),
+        require('../../assets/sounds/alarm.wav'),
         {
           isLooping: true,
           volume: this.currentVolume,

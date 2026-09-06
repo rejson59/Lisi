@@ -4,7 +4,7 @@
 // ============================================================
 
 // ---- Ustawienia ----
-export interface LisiSettings {
+export type LisiSettings = {
   id?: string;
   user_id: string;
   
@@ -84,7 +84,7 @@ Zawsze ustawiaj emocję PRZED odpowiedzią, żeby Twoja twarz pasowała do słó
 };
 
 // ---- Pamięć ----
-export interface MemoryEntry {
+export type MemoryEntry = {
   id?: string;
   user_id: string;
   category: 'fact' | 'preference' | 'conversation_summary' | 'interest' | 'important';
@@ -95,7 +95,7 @@ export interface MemoryEntry {
   access_count: number;
 }
 
-export interface ConversationSummary {
+export type ConversationSummary = {
   id?: string;
   user_id: string;
   summary: string;
@@ -107,7 +107,7 @@ export interface ConversationSummary {
 }
 
 // ---- Kalendarz (mobile) ----
-export interface CalendarEvent {
+export type CalendarEvent = {
   id?: string;
   user_id: string;
   title: string;
@@ -123,7 +123,7 @@ export interface CalendarEvent {
 }
 
 // ---- Zadania (mobile) ----
-export interface Task {
+export type Task = {
   id?: string;
   user_id: string;
   title: string;
@@ -138,7 +138,7 @@ export interface Task {
 }
 
 // ---- Budziki (mobile) ----
-export interface Alarm {
+export type Alarm = {
   id?: string;
   user_id: string;
   time: string;               // "HH:MM"
@@ -155,7 +155,7 @@ export interface Alarm {
 }
 
 // ---- Konwersacja ----
-export interface ChatMessage {
+export type ChatMessage = {
   id?: string;
   role: 'user' | 'assistant' | 'system' | 'tool';
   content: string;

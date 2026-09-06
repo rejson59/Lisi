@@ -1,8 +1,12 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "src"
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": ["../shared/src/*"],
+      "@/*": ["src/renderer/*"]
+    }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "vite.config.ts"]
 }

@@ -16,7 +16,7 @@ import {
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Voice from 'react-native-voice';
+import Voice from '@react-native-voice/voice';
 import * as Speech from 'expo-speech';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { LisiSettings, ChatMessage, LisiState } from '../../../shared/src/types';

@@ -4,8 +4,10 @@
 
 import { app, BrowserWindow, ipcMain, screen, desktopCapturer, shell, Tray, Menu, nativeImage } from 'electron';
 import * as path from 'path';
+import * as fs from 'fs';
 import { ScreenController } from './screen-control';
 import { ScreenCapture } from './screen-capture';
+import { AppUpdater } from './updater';
 
 let mainWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
@@ -52,8 +54,12 @@ function createWindow(): void {
 }
 
 function createTray(): void {
-  // Stwórz ikonę tray (mała ikonka lisa)
-  const icon = nativeImage.createEmpty();
+  // Spróbuj załadować ikonę lisa z resources, w razie czego pusta ikona
+  let icon = nativeImage.createEmpty();
+  const iconPath = path.join(__dirname, '../../resources/icon.png');
+  if (fs.existsSync(iconPath)) {
+    icon = nativeImage.createFromPath(iconPath).resize({ width: 16, height: 16 });
+  }
   tray = new Tray(icon);
   
   const contextMenu = Menu.buildFromTemplate([
@@ -76,6 +82,15 @@ app.whenReady().then(() => {
   createWindow();
   createTray();
   registerIPC();
+
+  // Auto-aktualizacje tylko w zbudowanej aplikacji (wymaga GitHub Releases)
+  if (app.isPackaged && mainWindow) {
+    try {
+      new AppUpdater(mainWindow).checkForUpdates();
+    } catch (err) {
+      console.error('[Main] Nie udało się uruchomić auto-updatera:', err);
+    }
+  }
 });
 
 app.on('window-all-closed', () => {
@@ -145,7 +160,11 @@ function registerIPC(): void {
   ipcMain.handle('screen:capture', async () => {
     return await screenCapture.captureScreen();
   });
-  
+
+  ipcMain.handle('screen:captureWindow', async (_event, windowName: string) => {
+    return await screenCapture.captureWindow(windowName);
+  });
+
   ipcMain.handle('screen:startShare', async () => {
     return await screenCapture.startStream();
   });
